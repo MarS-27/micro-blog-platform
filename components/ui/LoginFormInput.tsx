@@ -1,25 +1,23 @@
-import type { FC } from "react";
+import { useLoginContext } from "@/context/LoginContextProvider";
 import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import { type Control, Controller } from "react-hook-form";
-import type { UserLoginInfo } from "@/types/types";
 import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import type { FC } from "react";
+import { Controller } from "react-hook-form";
 
 type LoginFormInputProps = {
-  control: Control<UserLoginInfo>;
-  variant: "name" | "email" | "password" | "role";
+  variant: "user_name" | "email" | "password" | "user_role";
 };
 
-export const LoginFormInput: FC<LoginFormInputProps> = ({
-  control,
-  variant,
-}) => {
-  const variantCapitalize = variant.replace(
-    variant.charAt(0),
-    variant.charAt(0).toUpperCase()
-  );
+export const LoginFormInput: FC<LoginFormInputProps> = ({ variant }) => {
+  const { control, loginError } = useLoginContext();
+
+  const variantCapitalize = variant
+    .replace("_", " ")
+    .replace(variant.charAt(0), variant.charAt(0).toUpperCase());
+
   const passwordValidationPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
   return (
@@ -34,7 +32,7 @@ export const LoginFormInput: FC<LoginFormInputProps> = ({
       }
       render={({ field: { ref, value, onChange }, formState: { errors } }) => (
         <FormControl>
-          {variant === "role" ? (
+          {variant === "user_role" ? (
             <>
               <InputLabel id="select-label" error={!!errors[variant]}>
                 {errors[variant]?.type === "required"
@@ -74,7 +72,7 @@ export const LoginFormInput: FC<LoginFormInputProps> = ({
                   : `${variantCapitalize}`
               }
               variant="outlined"
-              type={variant === "name" ? "text" : variant}
+              type={variant === "user_name" ? "text" : variant}
               sx={{
                 backgroundColor: "background.paper",
                 borderRadius: "6px",

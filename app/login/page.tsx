@@ -2,12 +2,12 @@
 import { LoginForm } from "@/components/ui/LoginForm";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { useState, type FC } from "react";
+import type { FC } from "react";
 import Typography from "@mui/material/Typography";
-import type { LoginStatus } from "@/types/types";
+import { useLoginContext } from "@/context/LoginContextProvider";
 
 const Login: FC = () => {
-  const [loginStatus, setLoginStatus] = useState<LoginStatus>("signin");
+  const { loginStatus, setLoginStatus, loginError } = useLoginContext();
 
   return (
     <Box
@@ -34,8 +34,17 @@ const Login: FC = () => {
             Registration is successful, log in to the account.
           </Typography>
         ) : null}
+        {loginError ? (
+          <Typography
+            variant="body1"
+            color="error"
+            sx={{ textAlign: "center" }}
+          >
+            {loginError}!
+          </Typography>
+        ) : null}
       </Box>
-      <LoginForm loginStatus={loginStatus} />
+      <LoginForm />
       <Button
         sx={{ margin: "0 auto", display: "block" }}
         onClick={
