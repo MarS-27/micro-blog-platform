@@ -1,10 +1,10 @@
-import type { FC } from "react";
-import { Post } from "@/components/ui/Post";
+import { AddPostForm } from "@/components/ui/AddPostForm";
+import { PostItem } from "@/components/ui/PostItem";
 import type { Database } from "@/types/database.types";
 import Box from "@mui/material/Box";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import { AddPostForm } from "@/components/ui/AddPostForm";
+import type { FC } from "react";
 
 const Home: FC = async () => {
   const supabase = createServerComponentClient<Database>({
@@ -13,14 +13,9 @@ const Home: FC = async () => {
 
   const { data: session } = await supabase.auth.getSession();
 
-  let { data: posts, error: postsError } = await supabase.from("posts").select(`
-    *,
-    profile (
-      *
-    )
-  `);
+  const { data: posts } = await supabase.from("posts").select(`*, profile (*)`);
 
-  let { data: profile, error: profileError } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("profile")
     .select("*")
     .eq("profile_user_id", session.session?.user.id as string);
@@ -42,7 +37,7 @@ const Home: FC = async () => {
         <AddPostForm profile_id={profile[0].id} />
       ) : null}
       {posts?.map((post) => (
-        <Post key={post.id} post={post} authorLabel={true} />
+        <PostItem key={post.id} post={post} authorLabel={true} />
       ))}
     </Box>
   );

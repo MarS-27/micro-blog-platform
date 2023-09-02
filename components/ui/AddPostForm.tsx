@@ -10,6 +10,7 @@ import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
 import { useState, type FC } from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 
@@ -18,6 +19,7 @@ type AddPostFormProps = {
 };
 
 export const AddPostForm: FC<AddPostFormProps> = ({ profile_id }) => {
+  const router = useRouter();
   const [isShowForm, setShowForm] = useState(false);
   const { control, handleSubmit, reset } = useForm<Post>();
 
@@ -31,6 +33,7 @@ export const AddPostForm: FC<AddPostFormProps> = ({ profile_id }) => {
 
     reset({ title: "", text: "" });
     setShowForm(false);
+    router.refresh();
   };
 
   return (
@@ -42,7 +45,7 @@ export const AddPostForm: FC<AddPostFormProps> = ({ profile_id }) => {
         flexDirection: "column",
         gap: "20px",
         width: { xs: "100%", sm: "70%" },
-        margin: "20px auto",
+        margin: "10px auto",
       }}
     >
       <Box
@@ -130,7 +133,7 @@ export const AddPostForm: FC<AddPostFormProps> = ({ profile_id }) => {
           />
           <Button
             sx={{
-              width: { xs: "50%", sm: "30%" },
+              width: "150px",
               margin: "0 auto",
             }}
             type="submit"

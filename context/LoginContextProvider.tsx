@@ -34,7 +34,13 @@ export const LoginContextProvider: FC<LoginContextProviderProps> = ({
 
         const { error: profileError } = await supabase
           .from("profile")
-          .insert([{ user_name, user_role, profile_user_id: data.user?.id }]);
+          .insert([
+            {
+              user_name: user_name as string,
+              user_role: user_role as string,
+              profile_user_id: data.user?.id as string,
+            },
+          ]);
 
         if (error) {
           setLoginError(error.message);

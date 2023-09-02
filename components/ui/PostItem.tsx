@@ -5,12 +5,12 @@ import Typography from "@mui/material/Typography";
 import { PostWithProfile } from "@/types/types";
 import { AuthorLabel } from "./AuthorLabel";
 
-type PostProps = {
+type PostItemProps = {
   post: PostWithProfile;
   authorLabel: boolean;
 };
 
-export const Post: FC<PostProps> = ({ post, authorLabel }) => {
+export const PostItem: FC<PostItemProps> = ({ post, authorLabel }) => {
   return (
     <Paper
       sx={{
@@ -28,12 +28,12 @@ export const Post: FC<PostProps> = ({ post, authorLabel }) => {
         }}
       >
         <Typography variant="subtitle1">
-          {post.created_at.slice(0, 10)}
+          {post.created_at?.slice(0, 10)}
         </Typography>
         {authorLabel ? (
           <AuthorLabel
             profileId={post.profile_id}
-            userName={post.profile?.user_name}
+            userName={post.profile?.user_name as string}
           />
         ) : null}
       </Box>

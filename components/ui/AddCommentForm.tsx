@@ -1,13 +1,18 @@
 "use client";
 import type { Database } from "@/types/database.types";
 import type { PostComments } from "@/types/types";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Fab from "@mui/material/Fab";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { type FC } from "react";
+import { useState, type FC } from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 type AddPostFormProps = {
   profile_id: string;
@@ -18,7 +23,8 @@ export const AddCommentForm: FC<AddPostFormProps> = ({
   profile_id,
   post_id,
 }) => {
-  //   const [isShowForm, setShowForm] = useState(false);
+  const router = useRouter();
+  const [isShowForm, setShowForm] = useState(false);
   const { control, handleSubmit, reset } = useForm<PostComments>();
 
   const supabase = createClientComponentClient<Database>();
@@ -29,9 +35,9 @@ export const AddCommentForm: FC<AddPostFormProps> = ({
       .from("comments")
       .insert([{ text, profile_id, post_id }]);
 
-    // reset({ text: "" });
-    // setShowForm(false);
-    console.log(error);
+    reset({ text: "" });
+    setShowForm(false);
+    router.refresh();
   };
 
   return (
@@ -41,32 +47,43 @@ export const AddCommentForm: FC<AddPostFormProps> = ({
       sx={{
         display: "flex",
         flexDirection: "column",
-        gap: "20px",
-        width: { xs: "100%", sm: "70%" },
+        gap: "10px",
+        width: { xs: "100%", sm: "80%" },
         margin: "20px auto",
       }}
     >
       <Box
         sx={{
-          paddingBottom: "10px",
-          borderBottom: "2px solid rgba(0, 0, 0, 0.6)",
           display: "flex",
+          justifyContent: "flex-start",
           alignItems: "center",
           gap: "10px",
         }}
       >
-        {/* <Typography variant="h5">Add post</Typography> */}
-        {/* <Fab
+        <Fab
           color="secondary"
           size="small"
           onClick={() => setShowForm(!isShowForm)}
         >
           {isShowForm ? <CloseIcon /> : <AddIcon />}
-        </Fab> */}
+        </Fab>
+        {isShowForm ? (
+          <Button
+            sx={{
+              width: "150px",
+              padding: "4px",
+            }}
+            type="submit"
+            variant="contained"
+          >
+            Save
+          </Button>
+        ) : (
+          <Typography variant="body1">Add comment</Typography>
+        )}
       </Box>
 
-      {/* {isShowForm ? ( */}
-      <>
+      {isShowForm ? (
         <Controller
           name="text"
           control={control}
@@ -87,7 +104,7 @@ export const AddCommentForm: FC<AddPostFormProps> = ({
                 variant="outlined"
                 type="text"
                 multiline
-                rows={4}
+                rows={2}
                 sx={{
                   backgroundColor: "background.paper",
                   borderRadius: "6px",
@@ -97,18 +114,7 @@ export const AddCommentForm: FC<AddPostFormProps> = ({
             </FormControl>
           )}
         />
-        <Button
-          sx={{
-            width: { xs: "50%", sm: "30%" },
-            margin: "0 auto",
-          }}
-          type="submit"
-          variant="contained"
-        >
-          Save
-        </Button>
-      </>
-      {/* ) : null} */}
+      ) : null}
     </Box>
   );
 };
