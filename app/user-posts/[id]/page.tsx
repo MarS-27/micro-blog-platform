@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Typography from "@mui/material/Typography";
+import { AddCommentForm } from "@/components/ui/AddCommentForm";
 
 type UserPostsProps = {
   params: { id: string };
@@ -15,7 +16,7 @@ const UserPosts: FC<UserPostsProps> = async ({ params: { id } }) => {
     cookies,
   });
 
-  const { data } = await supabase.auth.getSession();
+  const { data: session } = await supabase.auth.getSession();
 
   let { data: posts, error } = await supabase
     .from("posts")
@@ -29,13 +30,18 @@ const UserPosts: FC<UserPostsProps> = async ({ params: { id } }) => {
     )
     .eq("profile_id", id);
 
+  let { data: profile, error: profileError } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("profile_user_id", session.session?.user.id as string);
+
   return (
     <Box
       component="section"
       sx={{
         maxWidth: "lg",
         width: "100%",
-        margin: "40px auto 0 auto",
+        margin: "80px auto 40px auto",
         px: "24px",
         display: "flex",
         flexDirection: "column",
@@ -49,10 +55,19 @@ const UserPosts: FC<UserPostsProps> = async ({ params: { id } }) => {
           borderBottom: "2px solid rgba(0, 0, 0, 0.6)",
         }}
       >
-        Posts by {posts[0].profile?.user_name}
+        {posts?.length
+          ? `Posts by ${posts[0].profile?.user_name}`
+          : "Posts not found!"}
       </Typography>
       {posts?.map((post) => (
-        <Post key={post.id} post={post} authorLabel={false} />
+        <Box key={post.id}>
+          <Post post={post} authorLabel={false} />
+          {session &&
+          profile?.length &&
+          profile[0].user_role === "Commentator" ? (
+            <AddCommentForm post_id={post.id} profile_id={profile[0].id} />
+          ) : null}
+        </Box>
       ))}
     </Box>
   );

@@ -19,7 +19,7 @@ const Header: FC = async () => {
   } = await supabase.auth.getSession();
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed">
       <Toolbar
         sx={{
           justifyContent: "space-between",

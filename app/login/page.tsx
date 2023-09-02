@@ -15,7 +15,7 @@ const Login: FC = () => {
       sx={{
         maxWidth: "lg",
         width: "100%",
-        margin: "40px auto 0 auto",
+        margin: "100px auto 0 auto",
         px: "24px",
       }}
     >
