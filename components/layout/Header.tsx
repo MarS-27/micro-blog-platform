@@ -1,11 +1,23 @@
+import type { FC } from "react";
+import type { Database } from "@/types/database.types";
+import NewspaperIcon from "@mui/icons-material/Newspaper";
 import AppBar from "@mui/material/AppBar";
-import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 import Link from "next/link";
-import { type FC } from "react";
+import { AuthButton } from "./AuthButton";
 
-const Header: FC = () => {
+const Header: FC = async () => {
+  const supabase = createServerComponentClient<Database>({
+    cookies,
+  });
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   return (
     <AppBar position="static">
       <Toolbar
@@ -16,19 +28,17 @@ const Header: FC = () => {
           margin: "0 auto",
         }}
       >
-        {/* <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton> */}
-        <Link href="/">
+        <Link
+          href="/"
+          style={{ display: "flex", gap: "10px", alignItems: "center" }}
+        >
+          <NewspaperIcon
+            sx={{
+              color: "primary.contrastText",
+            }}
+          />
           <Typography
             sx={{
-              fontStyle: "italic",
               fontWeight: 600,
               fontSize: "24px",
               color: "primary.contrastText",
@@ -37,15 +47,14 @@ const Header: FC = () => {
             Just a blog
           </Typography>
         </Link>
-        <Link href="/login">
-          <Button
-            sx={{
-              color: "primary.contrastText",
-            }}
-          >
-            Login
-          </Button>
-        </Link>
+
+        {session ? (
+          <AuthButton variant="Logout" />
+        ) : (
+          <Link href="/login">
+            <AuthButton variant="Login" />
+          </Link>
+        )}
       </Toolbar>
     </AppBar>
   );

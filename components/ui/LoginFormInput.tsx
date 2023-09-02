@@ -12,7 +12,7 @@ type LoginFormInputProps = {
 };
 
 export const LoginFormInput: FC<LoginFormInputProps> = ({ variant }) => {
-  const { control, loginError } = useLoginContext();
+  const { control } = useLoginContext();
 
   const variantCapitalize = variant
     .replace("_", " ")

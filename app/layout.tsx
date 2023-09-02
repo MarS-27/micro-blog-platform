@@ -1,11 +1,12 @@
-import Header from "@/components/layout/Header";
 import "./globals.css";
+import Header from "@/components/layout/Header";
 import type { Metadata } from "next";
 import type { FC, ReactNode } from "react";
 import Footer from "@/components/layout/Footer";
-import { ThemeProvider } from "@mui/system";
-import { Box, CssBaseline } from "@mui/material";
 import { theme } from "@/utils/theme";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import ThemeProvider from "@mui/material/styles/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "Micro-blog",

@@ -1,9 +1,11 @@
 "use client";
 import { useState, type FC, type ReactNode, useContext } from "react";
 import type { UserLoginInfo, LoginStatus } from "@/types/types";
-import supabase from "@/supebase";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { LoginContext } from "./loginContext";
+import { useRouter } from "next/navigation";
+import type { Database } from "@/types/database.types";
 
 type LoginContextProviderProps = {
   children: ReactNode;
@@ -15,6 +17,9 @@ export const LoginContextProvider: FC<LoginContextProviderProps> = ({
   const [loginStatus, setLoginStatus] = useState<LoginStatus>("signin");
   const [loginError, setLoginError] = useState<string>("");
   const { control, handleSubmit, reset } = useForm<UserLoginInfo>();
+  const router = useRouter();
+
+  const supabase = createClientComponentClient<Database>();
 
   const loginFormSubmit: SubmitHandler<UserLoginInfo> = async (credentials) => {
     const { email, password, user_name, user_role } = credentials;
@@ -25,16 +30,16 @@ export const LoginContextProvider: FC<LoginContextProviderProps> = ({
         let { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: {
-            data: {
-              user_name,
-              user_role,
-            },
-          },
         });
+
+        const { error: profileError } = await supabase
+          .from("profile")
+          .insert([{ user_name, user_role, profile_user_id: data.user?.id }]);
 
         if (error) {
           setLoginError(error.message);
+        } else if (profileError) {
+          setLoginError(profileError.message);
         } else {
           setLoginStatus("signup success");
         }
@@ -44,7 +49,7 @@ export const LoginContextProvider: FC<LoginContextProviderProps> = ({
     } else {
       try {
         setLoginError("");
-        let { data, error } = await supabase.auth.signInWithPassword({
+        let { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
@@ -52,7 +57,8 @@ export const LoginContextProvider: FC<LoginContextProviderProps> = ({
         if (error) {
           setLoginError(error.message);
         } else {
-          setLoginStatus("signin");
+          router.back();
+          router.refresh();
         }
       } catch (error) {
         console.log(error);
