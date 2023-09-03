@@ -1,5 +1,7 @@
 # Micro blog platform
 
+Before run, create .env.local file look like .envLocal
+
 First, run the development server:
 
 ```bash
@@ -19,3 +21,5 @@ pnpm dev
 - React-Hook-Form
 
 ## Deploy on Vercel
+
+https://micro-blog-platform.vercel.app
