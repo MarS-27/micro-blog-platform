@@ -10,8 +10,6 @@ type CommentsProps = {
   post: PostWithProfile;
 };
 
-export const dynamic = "force-dynamic";
-
 async function getComments(postId: number) {
   const supabase = createServerComponentClient<Database>({
     cookies,
