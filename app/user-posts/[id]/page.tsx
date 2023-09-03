@@ -11,11 +11,11 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import Fab from "@mui/material/Fab";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 type UserPostsProps = {
   params: { id: string };
 };
-
-export const dynamic = "force-dynamic";
 
 async function getUserPostsData(userId: string) {
   const supabase = createServerComponentClient<Database>({

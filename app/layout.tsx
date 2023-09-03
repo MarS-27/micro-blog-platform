@@ -6,6 +6,8 @@ import type { Metadata } from "next";
 import type { FC, ReactNode } from "react";
 import "./globals.css";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Micro-blog",
 };
