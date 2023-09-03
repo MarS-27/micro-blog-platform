@@ -15,6 +15,8 @@ type UserPostsProps = {
   params: { id: string };
 };
 
+export const dynamic = "force-dynamic";
+
 async function getUserPostsData(userId: string) {
   const supabase = createServerComponentClient<Database>({
     cookies,

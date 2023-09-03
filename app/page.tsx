@@ -6,6 +6,8 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import type { FC } from "react";
 
+export const dynamic = "force-dynamic";
+
 async function getHomePageData() {
   const supabase = createServerComponentClient<Database>({
     cookies,

@@ -10,12 +10,14 @@ type CommentsProps = {
   post: PostWithProfile;
 };
 
+export const dynamic = "force-dynamic";
+
 async function getComments(postId: number) {
   const supabase = createServerComponentClient<Database>({
     cookies,
   });
 
-  let { data: comments } = await supabase
+  const { data: comments } = await supabase
     .from("comments")
     .select(`*, profile (*)`)
     .eq("post_id", postId);

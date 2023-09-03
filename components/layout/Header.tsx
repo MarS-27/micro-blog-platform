@@ -9,6 +9,8 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { AuthButton } from "./AuthButton";
 
+export const dynamic = "force-dynamic";
+
 async function getSession() {
   const supabase = createServerComponentClient<Database>({
     cookies,
