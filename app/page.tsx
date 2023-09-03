@@ -6,7 +6,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import type { FC } from "react";
 
-const Home: FC = async () => {
+async function getHomePageData() {
   const supabase = createServerComponentClient<Database>({
     cookies,
   });
@@ -19,6 +19,12 @@ const Home: FC = async () => {
     .from("profile")
     .select("*")
     .eq("profile_user_id", session.session?.user.id as string);
+
+  return { session, posts, profile };
+}
+
+const Home: FC = async () => {
+  const { session, posts, profile } = await getHomePageData();
 
   return (
     <Box

@@ -10,7 +10,7 @@ type CommentsProps = {
   post: PostWithProfile;
 };
 
-export const Comments: FC<CommentsProps> = async ({ post }) => {
+async function getComments(postId: number) {
   const supabase = createServerComponentClient<Database>({
     cookies,
   });
@@ -18,7 +18,13 @@ export const Comments: FC<CommentsProps> = async ({ post }) => {
   let { data: comments } = await supabase
     .from("comments")
     .select(`*, profile (*)`)
-    .eq("post_id", post.id as number);
+    .eq("post_id", postId);
+
+  return comments;
+}
+
+export const Comments: FC<CommentsProps> = async ({ post }) => {
+  const comments = await getComments(post.id as number);
 
   return (
     <Box

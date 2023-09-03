@@ -15,22 +15,28 @@ type UserPostsProps = {
   params: { id: string };
 };
 
-const UserPosts: FC<UserPostsProps> = async ({ params: { id } }) => {
+async function getUserPostsData(userId: string) {
   const supabase = createServerComponentClient<Database>({
     cookies,
   });
 
   const { data: session } = await supabase.auth.getSession();
 
-  let { data: posts } = await supabase
+  const { data: posts } = await supabase
     .from("posts")
     .select(`*, profile (*)`)
-    .eq("profile_id", id);
+    .eq("profile_id", userId);
 
-  let { data: profile } = await supabase
+  const { data: profile } = await supabase
     .from("profile")
     .select("*")
     .eq("profile_user_id", session.session?.user.id as string);
+
+  return { session, posts, profile };
+}
+
+const UserPosts: FC<UserPostsProps> = async ({ params: { id } }) => {
+  const { session, posts, profile } = await getUserPostsData(id);
 
   return (
     <Box

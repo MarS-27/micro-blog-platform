@@ -9,7 +9,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { AuthButton } from "./AuthButton";
 
-const Header: FC = async () => {
+async function getSession() {
   const supabase = createServerComponentClient<Database>({
     cookies,
   });
@@ -17,6 +17,12 @@ const Header: FC = async () => {
   const {
     data: { session },
   } = await supabase.auth.getSession();
+
+  return session;
+}
+
+const Header: FC = async () => {
+  const session = await getSession();
 
   return (
     <AppBar position="fixed">
