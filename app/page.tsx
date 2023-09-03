@@ -15,7 +15,7 @@ const Home: FC = async () => {
 
   const { data: posts } = await supabase.from("posts").select(`*, profile (*)`);
 
-  const { data: profile, error: profileError } = await supabase
+  const { data: profile } = await supabase
     .from("profile")
     .select("*")
     .eq("profile_user_id", session.session?.user.id as string);

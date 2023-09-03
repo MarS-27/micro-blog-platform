@@ -15,7 +15,7 @@ export const Comments: FC<CommentsProps> = async ({ post }) => {
     cookies,
   });
 
-  let { data: comments, error: commentsError } = await supabase
+  let { data: comments } = await supabase
     .from("comments")
     .select(`*, profile (*)`)
     .eq("post_id", post.id as number);

@@ -22,12 +22,12 @@ const UserPosts: FC<UserPostsProps> = async ({ params: { id } }) => {
 
   const { data: session } = await supabase.auth.getSession();
 
-  let { data: posts, error } = await supabase
+  let { data: posts } = await supabase
     .from("posts")
     .select(`*, profile (*)`)
     .eq("profile_id", id);
 
-  let { data: profile, error: profileError } = await supabase
+  let { data: profile } = await supabase
     .from("profile")
     .select("*")
     .eq("profile_user_id", session.session?.user.id as string);

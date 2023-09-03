@@ -31,9 +31,7 @@ export const AddCommentForm: FC<AddPostFormProps> = ({
 
   const addPostSubmit: SubmitHandler<PostComments> = async (data) => {
     const { text } = data;
-    const { error } = await supabase
-      .from("comments")
-      .insert([{ text, profile_id, post_id }]);
+    await supabase.from("comments").insert([{ text, profile_id, post_id }]);
 
     reset({ text: "" });
     setShowForm(false);

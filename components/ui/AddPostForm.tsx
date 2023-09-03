@@ -27,9 +27,7 @@ export const AddPostForm: FC<AddPostFormProps> = ({ profile_id }) => {
 
   const addPostSubmit: SubmitHandler<Post> = async (data) => {
     const { text, title } = data;
-    const { error } = await supabase
-      .from("posts")
-      .insert([{ text, title, profile_id }]);
+    await supabase.from("posts").insert([{ text, title, profile_id }]);
 
     reset({ title: "", text: "" });
     setShowForm(false);
